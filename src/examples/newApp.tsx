@@ -15,14 +15,12 @@ const Tab = createBottomTabNavigator();
 
 function AppContent() {
   const [ready, setReady] = useState(false);
-  console.log('ready', ready);
   const [cfg, setCfg] = useState<{
     enable_trivia: boolean;
     language: string;
   } | null>(null);
   const [isOnline, setIsOnline] = useState(false);
   const deviceType = useDeviceType();
-  console.log('deviceType', deviceType);
   const { theme } = useTheme();
 
   const onReady = useCallback(
@@ -62,16 +60,13 @@ function AppContent() {
   );
 
   if (!ready) {
-    console.log('T-Box autoplay mode (mock): playing cached ads in loop...');
     if (deviceType === 'tbox') {
-      console.log('launching autoplay loop');
       // Not activated until real hardware; keeping here as placeholder
       launchAutoplayLoop();
     }
     return <DeviceBootLoader onReady={onReady} />;
   }
 
-  console.log('Main App lunch');
   return (
     <NavigationContainer theme={navTheme}>
       <Tab.Navigator

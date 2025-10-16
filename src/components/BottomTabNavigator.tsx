@@ -1,82 +1,75 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  // Dimensions,
-} from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
-import { useTranslation } from 'react-i18next';
-import { Home, Clock, DollarSign, FileText, Bell, Settings } from 'lucide-react-native';
-
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface TabItem {
   name: string;
   label: string;
-  icon: any;
+  emoji: string;
   route: string;
 }
 
 const tabItems: TabItem[] = [
   {
-    name: 'Dashboard',
-    label: 'navigation.dashboard',
-    icon: Home,
-    route: 'Dashboard',
+    name: 'Home',
+    label: 'Home',
+    emoji: '🏠',
+    route: 'Home',
   },
   {
-    name: 'Sessions',
-    label: 'navigation.sessions',
-    icon: Clock,
-    route: 'Sessions',
-  },
-  {
-    name: 'Earnings',
-    label: 'navigation.earnings',
-    icon: DollarSign,
-    route: 'Earnings',
-  },
-  {
-    name: 'Documents',
-    label: 'navigation.documents',
-    icon: FileText,
-    route: 'Documents',
-  },
-  {
-    name: 'Notifications',
-    label: 'navigation.notifications',
-    icon: Bell,
-    route: 'Notifications',
+    name: 'Trivia',
+    label: 'Trivia',
+    emoji: '🎮',
+    route: 'Trivia',
   },
   {
     name: 'Settings',
-    label: 'navigation.settings',
-    icon: Settings,
+    label: 'Settings',
+    emoji: '⚙️',
     route: 'Settings',
-  }
+  },
+  {
+    name: 'Logs',
+    label: 'Logs',
+    emoji: '📝',
+    route: 'Logs',
+  },
 ];
 
-export const BottomTabNavigator = ({ state, navigation }: any) => {
+interface BottomTabNavigatorProps {
+  state: any;
+  navigation: any;
+  showTrivia?: boolean;
+}
 
+export const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
+  state,
+  navigation,
+  showTrivia = true,
+}) => {
+  console.log('BottomTabNavigator with showTrivia', showTrivia);
   const { theme } = useTheme();
-  const { t } = useTranslation();
 
-const currentRouteName = state.routes[state.index].name;
+  const currentRouteName = state.routes[state.index].name;
 
   const handleTabPress = (routeName: string) => {
-    // navigation.navigate(routeName as never);
-    navigation.navigate('Main', { screen: routeName as never });
+    navigation.navigate(routeName as never);
   };
+
+  // Filter tabs based on showTrivia prop
+  const visibleTabs = tabItems.filter(tab => {
+    if (tab.name === 'Trivia') {
+      return showTrivia;
+    }
+    return true;
+  });
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
       <View style={[styles.tabBar, { borderTopColor: theme.colors.border }]}>
-        {tabItems.map(item => {
-
+        {visibleTabs.map(item => {
           const isActive = currentRouteName === item.name;
-          const IconComponent = item.icon;
 
           return (
             <TouchableOpacity
@@ -96,12 +89,16 @@ const currentRouteName = state.routes[state.index].name;
                   },
                 ]}
               >
-                <IconComponent
-                  size={24}
-                  color={
-                    isActive ? theme.colors.primary : theme.colors.textSecondary
-                  }
-                />
+                <Text
+                  style={{
+                    fontSize: 18,
+                    color: isActive
+                      ? theme.colors.primary
+                      : theme.colors.textSecondary,
+                  }}
+                >
+                  {item.emoji}
+                </Text>
               </View>
               <Text
                 style={[
@@ -114,7 +111,7 @@ const currentRouteName = state.routes[state.index].name;
                   },
                 ]}
               >
-                {t(item.label)}
+                {item.label}
               </Text>
             </TouchableOpacity>
           );

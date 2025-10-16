@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme } from '../../contexts/ThemeContext';
-import { useTranslation } from 'react-i18next';
-import { Sun, Moon } from 'lucide-react-native';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface ThemeToggleProps {
   style?: any;
@@ -10,7 +8,6 @@ interface ThemeToggleProps {
 
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ style }) => {
   const { theme, isDark, toggleTheme } = useTheme();
-  const { t } = useTranslation();
 
   return (
     <TouchableOpacity
@@ -28,11 +25,9 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ style }) => {
           { backgroundColor: theme.colors.primary + '20' },
         ]}
       >
-        {isDark ? (
-          <Moon size={16} color={theme.colors.primary} />
-        ) : (
-          <Sun size={16} color={theme.colors.primary} />
-        )}
+        <Text style={{ color: theme.colors.primary, fontSize: 14 }}>
+          {isDark ? '🌙' : '☀️'}
+        </Text>
       </View>
       <Text style={[styles.text, { color: theme.colors.textPrimary }]}>
         {isDark ? 'Dark' : 'Light'}
