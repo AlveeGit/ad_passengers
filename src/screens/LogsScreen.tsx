@@ -251,6 +251,7 @@ const LogsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 20,
   },
   header: {
     paddingHorizontal: 20,

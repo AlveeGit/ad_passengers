@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 8,
+    paddingBottom: 50,
   },
   tabBar: {
     flexDirection: 'row',

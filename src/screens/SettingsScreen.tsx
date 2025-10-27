@@ -162,6 +162,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 20,
   },
   contentContainer: {
     paddingBottom: 100, // Account for bottom tab bar

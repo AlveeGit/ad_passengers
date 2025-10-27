@@ -9,17 +9,20 @@ export type Impression = {
   campaignId: string;
   assetFile: string;
   ts: number;
+  meta?: Record<string, any>;
 };
 
 export async function logImpression(
   campaignId: string,
   assetFile: string,
+  meta?: Record<string, any>,
 ): Promise<void> {
   const event: Impression = {
     id: uuidv4(),
     campaignId,
     assetFile,
     ts: Date.now(),
+    meta,
   };
   const existing = await AsyncStorage.getItem(KEY_IMPRESSIONS);
   const list: Impression[] = existing ? JSON.parse(existing) : [];
