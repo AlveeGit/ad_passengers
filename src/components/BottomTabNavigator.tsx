@@ -17,24 +17,24 @@ const tabItems: TabItem[] = [
     emoji: '🏠',
     route: 'Home',
   },
-  {
-    name: 'Trivia',
-    label: 'Trivia',
-    emoji: '🎮',
-    route: 'Trivia',
-  },
+  // {
+  //   name: 'Trivia',
+  //   label: 'Trivia',
+  //   emoji: '🎮',
+  //   route: 'Trivia',
+  // },
   {
     name: 'Settings',
     label: 'Settings',
     emoji: '⚙️',
     route: 'Settings',
   },
-  {
-    name: 'Logs',
-    label: 'Logs',
-    emoji: '📝',
-    route: 'Logs',
-  },
+  // {
+  //   name: 'Logs',
+  //   label: 'Logs',
+  //   emoji: '📝',
+  //   route: 'Logs',
+  // },
 ];
 
 interface BottomTabNavigatorProps {

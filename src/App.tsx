@@ -10,6 +10,7 @@ import HomeScreen from './screens/HomeScreen';
 import TriviaScreen from './screens/TriviaScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import LogsScreen from './screens/LogsScreen';
+import { requestPermissions } from './utils/requestPermissions';
 
 const Tab = createBottomTabNavigator();
 
@@ -66,6 +67,8 @@ function AppContent() {
     }
     return <DeviceBootLoader onReady={onReady} />;
   }
+
+  requestPermissions();
 
   return (
     <NavigationContainer theme={navTheme}>
