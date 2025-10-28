@@ -1,75 +1,67 @@
 import { Alert, Linking, PermissionsAndroid, Platform } from 'react-native';
 
-/**
- * Request runtime permission.
- * @returns {boolean}
- */
 export async function requestPermissions() {
-  console.log('Platform.OS', Platform.OS);
-  console.log('Platform.Version', Platform.Version);
-  if (Platform.OS === 'android') {
+  try {
+    if (Platform.OS !== 'android') return true;
+
+    const apiLevel = Platform.Version;
     const permissions = [];
-    if (Platform.Version >= 23 && Platform.Version <= 30) {
+
+    if (apiLevel < 31) {
+      // Android 6–11 needs location to scan BLE devices
       permissions.push(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-    } else if (Platform.Version >= 31) {
+    } else {
+      // Android 12+ needs Bluetooth runtime perms
       permissions.push(
-        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-        PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADVERTISE,
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
       );
-    }
-    console.log('permissions', permissions);
 
-    if (permissions.length === 0) {
-      return true;
+      // Some BLE libraries still need location even on Android 12+
+      permissions.push(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
     }
+
+    console.log('Requesting permissions:', permissions);
+
     const granted = await PermissionsAndroid.requestMultiple(
       permissions as any,
     );
-    console.log('granted', granted);
 
-    // Detect "NEVER ASK AGAIN"
-    const neverAskAgain = Object.values(granted).some(
-      status => status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN,
+    console.log('Permissions result:', granted);
+
+    // Check if user selected "NEVER ASK AGAIN"
+    const neverAskAgain = Object.values(granted).includes(
+      PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN,
     );
 
     if (neverAskAgain) {
-      Alert.alert(
-        'Permissions Required',
-        'Bluetooth and Location permissions are required. Please enable them from app settings.',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Open Settings',
-            onPress: () => Linking.openSettings(),
-          },
-        ],
-      );
-      return false;
-    }
-    // Check if any denied
-    const allGranted = Object.values(granted).every(
-      status => status === PermissionsAndroid.RESULTS.GRANTED,
-    );
-    if (!allGranted) {
-      Alert.alert(
-        'Permissions Required',
-        'Bluetooth and Location permissions are required. Please enable them from app settings.',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          {
-            text: 'Open Settings',
-            onPress: () => Linking.openSettings(),
-          },
-        ],
-      );
-      return false;
+      return showPermissionAlert();
     }
 
-    return Object.values(granted).every(
-      result => result === PermissionsAndroid.RESULTS.GRANTED,
+    // If any permission is denied
+    const denied = Object.values(granted).includes(
+      PermissionsAndroid.RESULTS.DENIED,
     );
+
+    if (denied) {
+      return showPermissionAlert();
+    }
+
+    return true;
+  } catch (err) {
+    console.warn('Permission error:', err);
+    return false;
   }
-  return true;
+}
+
+function showPermissionAlert() {
+  Alert.alert(
+    'Permission Required',
+    'Bluetooth permissions are required to scan and connect to devices.',
+    [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Open Settings', onPress: () => Linking.openSettings() },
+    ],
+  );
+  return false;
 }

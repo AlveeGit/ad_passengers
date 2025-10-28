@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DeviceBootLoader from './features/bootstrap/DeviceBootLoader';
@@ -60,6 +60,16 @@ function AppContent() {
     [cfg?.enable_trivia],
   );
 
+  useEffect(() => {
+    async function init() {
+      const ok = await requestPermissions();
+      if (!ok) {
+        console.log('User denied permissions');
+      }
+    }
+    init();
+  }, []);
+
   if (!ready) {
     if (deviceType === 'tbox') {
       // Not activated until real hardware; keeping here as placeholder
@@ -67,8 +77,6 @@ function AppContent() {
     }
     return <DeviceBootLoader onReady={onReady} />;
   }
-
-  requestPermissions();
 
   return (
     <NavigationContainer theme={navTheme}>
