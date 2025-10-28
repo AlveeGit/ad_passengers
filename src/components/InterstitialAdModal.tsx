@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, View, StyleSheet } from 'react-native';
 import Video from 'react-native-video';
 import { useTheme } from '../contexts/ThemeContext';

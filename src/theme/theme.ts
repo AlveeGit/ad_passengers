@@ -10,6 +10,9 @@ export const lightColors = {
   secondaryLight: '#94A3B8',
   secondaryDark: '#475569',
 
+  // Accent colors
+  accent: '#FFB020',
+
   // Success, warning, error
   success: '#10B981',
   successLight: '#34D399',
@@ -69,6 +72,9 @@ export const darkColors = {
   secondary: '#94A3B8',
   secondaryLight: '#CBD5E1',
   secondaryDark: '#64748B',
+
+  // Accent colors
+  accent: '#FFB020',
 
   // Success, warning, error
   success: '#10B981',

@@ -1,5 +1,5 @@
 import Geolocation from '@react-native-community/geolocation';
-import { Platform } from 'react-native';
+// import { Platform } from 'react-native';
 
 /**
  * GPS Manager - Tracks location and calculates speed
@@ -129,6 +129,7 @@ class RealGPSManager implements GPSTracker {
             heading: position.coords.heading ?? undefined,
             timestamp: position.timestamp,
           };
+          console.log('GPS Start Position:', pos);
           this.lastPosition = pos;
           this.notifySubscribers(pos);
         },
@@ -149,6 +150,7 @@ class RealGPSManager implements GPSTracker {
   }
 
   stop(): void {
+    console.log('GPS Stop');
     if (this.watchId !== null) {
       Geolocation.clearWatch(this.watchId);
       this.watchId = null;
@@ -169,6 +171,7 @@ class RealGPSManager implements GPSTracker {
             heading: position.coords.heading ?? undefined,
             timestamp: position.timestamp,
           };
+          console.log('GPS Current Position:', pos);
           this.lastPosition = pos;
           resolve(pos);
         },
@@ -183,15 +186,18 @@ class RealGPSManager implements GPSTracker {
   }
 
   getLastPosition(): GPSPosition | null {
+    console.log('GPS Last Position:', this.lastPosition);
     return this.lastPosition;
   }
 
   subscribe(callback: (pos: GPSPosition) => void): () => void {
+    console.log('GPS Subscribe');
     this.subscribers.add(callback);
     return () => this.subscribers.delete(callback);
   }
 
   isTracking(): boolean {
+    console.log('GPS Is Tracking:', this.isActive);
     return this.isActive;
   }
 

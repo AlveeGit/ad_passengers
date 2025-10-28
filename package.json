@@ -28,6 +28,7 @@
     "react-native-screens": "^4.7.0",
     "react-native-video": "^6.5.4",
     "react-native-webview": "^13.10.4",
+    "react-native-wifi-reborn": "^4.13.6",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

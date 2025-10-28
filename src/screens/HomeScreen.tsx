@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -43,7 +43,7 @@ const HomeScreen: React.FC = () => {
         keyExtractor={item => item.id}
         numColumns={2}
         contentContainerStyle={styles.grid}
-        columnWrapperStyle={{ gap: 16 }}
+        columnWrapperStyle={styles.columnWrapper}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   cardDesc: { fontSize: 14, textAlign: 'center' },
+  columnWrapper: { gap: 16 },
 });
 
 export default HomeScreen;

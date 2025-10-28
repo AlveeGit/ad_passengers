@@ -48,7 +48,6 @@ export const BottomTabNavigator: React.FC<BottomTabNavigatorProps> = ({
   navigation,
   showTrivia = true,
 }) => {
-  console.log('BottomTabNavigator with showTrivia', showTrivia);
   const { theme } = useTheme();
 
   const currentRouteName = state.routes[state.index].name;

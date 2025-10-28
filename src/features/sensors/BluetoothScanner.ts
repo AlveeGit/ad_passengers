@@ -104,8 +104,6 @@ import { NativeEventEmitter, NativeModules } from 'react-native';
 
 const bleManagerEmitter = new NativeEventEmitter(NativeModules.BleManager);
 
-
-
 class RealBluetoothScanner implements BluetoothScanner {
   // private manager = new BleManager();
   private devices: BluetoothDevice[] = [];
@@ -127,6 +125,8 @@ class RealBluetoothScanner implements BluetoothScanner {
           deviceType: peripheral.advertising?.localName,
           timestamp: new Date(),
         };
+
+        console.log('Discovered device:', device);
         this.devices.push(device);
         this.notifySubscribers(this.devices);
       },
@@ -134,20 +134,24 @@ class RealBluetoothScanner implements BluetoothScanner {
   }
 
   stopScan(): void {
+    console.log('Stopping scan');
     BleManager.stopScan();
     this.isActive = false;
   }
 
   getDevices(): BluetoothDevice[] {
+    console.log('Getting devices:', this.devices);
     return this.devices;
   }
 
   subscribe(callback: (devices: BluetoothDevice[]) => void): () => void {
+    console.log('Subscribing to BluetoothScanner');
     this.subscribers.add(callback);
     return () => this.subscribers.delete(callback);
   }
 
   isScanning(): boolean {
+    console.log('Is scanning:', this.isActive);
     return this.isActive;
   }
 

@@ -78,7 +78,7 @@ class MockSeatbeltSensor implements SeatbeltSensor {
 /**
  * Real Seatbelt Sensor (commented out - requires vehicle integration)
  */
-// import { NativeModules } from 'react-native';
+// import { DeviceEventEmitter, NativeModules } from 'react-native';
 
 // const { SeatbeltModule } = NativeModules;
 
