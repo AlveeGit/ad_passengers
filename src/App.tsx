@@ -11,6 +11,7 @@ import TriviaScreen from './screens/TriviaScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import LogsScreen from './screens/LogsScreen';
 import { requestPermissions } from './utils/requestPermissions';
+import { RideProvider, useRide } from './features/ride/RideProvider';
 
 const Tab = createBottomTabNavigator();
 
@@ -107,7 +108,9 @@ function AppContent() {
 export default function RootApp() {
   return (
     <ThemeProvider>
-      <AppContent />
+      <RideProvider>
+        <AppContent />
+      </RideProvider>
     </ThemeProvider>
   );
 }

@@ -16,7 +16,7 @@ export interface WiFiScanner {
   startScan: () => Promise<void>;
   stopScan: () => void;
   getNetworks: () => WiFiNetwork[];
-  isConnectedToHomeWiFi: () => boolean;
+  isConnectedToHomeWiFi: () => Promise<boolean>;
   subscribe: (callback: (networks: WiFiNetwork[]) => void) => () => void;
   isScanning: () => boolean;
 }
@@ -128,44 +128,83 @@ class RealWiFiScanner implements WiFiScanner {
   private networks: WiFiNetwork[] = [];
   private homeNetworkSSID = 'HOME_WIFI';
   private isActive = false;
-  private subscribers: Set<(networks: WiFiNetwork[]) => void> = new Set();
+  private subscribers = new Set<(networks: WiFiNetwork[]) => void>();
 
   async startScan(): Promise<void> {
-    await WifiManager.requestPermissions();
-    await WifiManager.startScan();
-    this.isActive = true;
+    try {
+      console.log('WiFi Scan started');
+      this.isActive = true;
+      const results = await WifiManager.reScanAndLoadWifiList();
 
-    WifiManager.getWifiList((results) => {
-      this.networks = results.map((wifi: any) => ({
+      this.networks = results.map(wifi => ({
         ssid: wifi.SSID,
         bssid: wifi.BSSID,
         rssi: wifi.level,
         security: wifi.capabilities,
+        frequency: wifi.frequency,
         timestamp: new Date(),
       }));
+
+      console.log('WiFi Scan networks:', this.networks);
+
       this.notifySubscribers(this.networks);
-    });
+    } catch (error) {
+      console.error('WiFi Scan failed:', error);
+    }
   }
 
+  // async startScan(): Promise<void> {
+  //   await WifiManager.requestPermissions();
+  //   await WifiManager.startScan();
+  //   this.isActive = true;
+
+  //   WifiManager.getWifiList(results => {
+  //     this.networks = results.map((wifi: any) => ({
+  //       ssid: wifi.SSID,
+  //       bssid: wifi.BSSID,
+  //       rssi: wifi.level,
+  //       security: wifi.capabilities,
+  //       timestamp: new Date(),
+  //     }));
+  //     this.notifySubscribers(this.networks);
+  //   });
+  // }
+
   stopScan(): void {
+    console.log('WiFi Scan stopped');
     this.isActive = false;
   }
 
   getNetworks(): WiFiNetwork[] {
+    console.log('WiFi Scan networks:', this.networks);
     return this.networks;
   }
 
   async isConnectedToHomeWiFi(): Promise<boolean> {
-    const currentSSID = await WifiManager.getCurrentWifiSSID();
-    return currentSSID === this.homeNetworkSSID;
+    console.log('Checking WiFi connection');
+    try {
+      const currentSSID = await WifiManager.getCurrentWifiSSID();
+      console.log('Current WiFi SSID:', currentSSID);
+      return currentSSID === this.homeNetworkSSID;
+    } catch {
+      console.error('Error checking WiFi connection');
+      return false;
+    }
   }
+
+  // async isConnectedToHomeWiFi(): Promise<boolean> {
+  //   const currentSSID = await WifiManager.getCurrentWifiSSID();
+  //   return currentSSID === this.homeNetworkSSID;
+  // }
 
   subscribe(callback: (networks: WiFiNetwork[]) => void): () => void {
     this.subscribers.add(callback);
+    callback(this.networks);
     return () => this.subscribers.delete(callback);
   }
 
   isScanning(): boolean {
+    console.log('isScanning:', this.isActive);
     return this.isActive;
   }
 

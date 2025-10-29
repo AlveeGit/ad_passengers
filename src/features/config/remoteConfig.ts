@@ -10,6 +10,6 @@ export async function fetchRemoteConfig(
 ): Promise<RemoteConfig> {
   // const { data } = await client.get(`/api/config?device_id=${deviceId}`);
   // return data;
-  console.log('Mock API: config fetched');
+  // console.log('Mock API: config fetched');
   return mockConfigResponse;
 }

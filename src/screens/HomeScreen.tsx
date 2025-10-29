@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
+  Button,
 } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
 import PlayLoop from '../features/player/PlayLoop';
@@ -14,17 +15,44 @@ import GameWebViewModal, {
 } from '../components/GameWebViewModal';
 import InterstitialAdModal from '../components/InterstitialAdModal';
 import { logImpression } from '../features/logging/impressionLogger';
+import { useRide } from '../features/ride/RideProvider';
 
 const HomeScreen: React.FC = () => {
   const { theme } = useTheme();
   const [selectedGame, setSelectedGame] = useState<GameItem | null>(null);
   const [showGame, setShowGame] = useState(false);
   const [showAd, setShowAd] = useState(false);
+  const { startDetection, stopDetection, isDetecting, activeSession } =
+    useRide();
+  console.log('Active session:', activeSession);
+  console.log('Is detecting:', isDetecting);
+
+  const handleStart = () => {
+    console.log('Starting detection...');
+    startDetection('CAR123', 'DRV456');
+  };
+
+  const handleStop = async () => {
+    console.log('Stopping detection...');
+    const session = await stopDetection();
+    // console.log('Session completed:', session);
+  };
 
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
+      <View style={styles.rideInfoContainer}>
+        {isDetecting && (
+          <Text
+            style={[styles.rideInfoText, { color: theme.colors.textPrimary }]}
+          >
+            Ride in progress: {activeSession?.confidence_score}
+          </Text>
+        )}
+        <Button onPress={handleStart} title="Start Ride" />
+        <Button onPress={handleStop} title="Stop Ride" />
+      </View>
       {/* Header */}
       <View style={styles.header}>
         <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
@@ -134,6 +162,8 @@ const styles = StyleSheet.create({
   },
   cardDesc: { fontSize: 14, textAlign: 'center' },
   columnWrapper: { gap: 16 },
+  rideInfoContainer: { padding: 16, gap: 8 },
+  rideInfoText: { fontSize: 16, fontWeight: '700' },
 });
 
 export default HomeScreen;

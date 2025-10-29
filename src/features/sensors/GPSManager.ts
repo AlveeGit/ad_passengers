@@ -112,6 +112,7 @@ class RealGPSManager implements GPSTracker {
   private isActive = false;
 
   start(): Promise<void> {
+    console.log('GPS Start');
     return new Promise((resolve, reject) => {
       if (this.isActive) {
         resolve();
@@ -191,7 +192,7 @@ class RealGPSManager implements GPSTracker {
   }
 
   subscribe(callback: (pos: GPSPosition) => void): () => void {
-    console.log('GPS Subscribe');
+    // console.log('GPS Subscribe');
     this.subscribers.add(callback);
     return () => this.subscribers.delete(callback);
   }

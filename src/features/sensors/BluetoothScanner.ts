@@ -1,6 +1,5 @@
 /**
  * Bluetooth Scanner - Scans for nearby devices
- * Mock implementation for development
  */
 
 export interface BluetoothDevice {
@@ -18,83 +17,6 @@ export interface BluetoothScanner {
   subscribe: (callback: (devices: BluetoothDevice[]) => void) => () => void;
   isScanning: () => boolean;
 }
-
-// class MockBluetoothScanner implements BluetoothScanner {
-//   private devices: BluetoothDevice[] = [];
-//   private isActive = false;
-//   private intervalId: NodeJS.Timeout | null = null;
-//   private subscribers: Set<(devices: BluetoothDevice[]) => void> = new Set();
-
-//   private mockDeviceNames = [
-//     'Car Audio',
-//     'Passenger Phone',
-//     'Headset BT',
-//     'Car Bluetooth',
-//     'Speaker',
-//   ];
-
-//   startScan(): Promise<void> {
-//     if (this.isActive) return Promise.resolve();
-
-//     this.isActive = true;
-//     this.devices = [];
-
-//     // Simulate discovering devices
-//     this.intervalId = setInterval(() => {
-//       const numDevices = Math.floor(Math.random() * 3) + 1;
-//       const discoveredDevices: BluetoothDevice[] = [];
-
-//       for (let i = 0; i < numDevices; i++) {
-//         const device =
-//           this.mockDeviceNames[
-//             Math.floor(Math.random() * this.mockDeviceNames.length)
-//           ];
-//         discoveredDevices.push({
-//           id: `bt-${Math.random().toString(36).substr(2, 9)}`,
-//           name: device,
-//           rssi: -50 - Math.random() * 40, // -50 to -90
-//           deviceType: 'phone',
-//           timestamp: new Date(),
-//         });
-//       }
-
-//       this.devices = discoveredDevices;
-//       this.notifySubscribers(this.devices);
-//     }, 5000); // Scan every 5 seconds
-
-//     console.log('Mock Bluetooth: Started scanning');
-//     return Promise.resolve();
-//   }
-
-//   stopScan(): void {
-//     if (!this.isActive) return;
-
-//     this.isActive = false;
-//     if (this.intervalId) {
-//       clearInterval(this.intervalId);
-//       this.intervalId = null;
-//     }
-//     this.devices = [];
-//     console.log('Mock Bluetooth: Stopped scanning');
-//   }
-
-//   getDevices(): BluetoothDevice[] {
-//     return this.devices;
-//   }
-
-//   subscribe(callback: (devices: BluetoothDevice[]) => void): () => void {
-//     this.subscribers.add(callback);
-//     return () => this.subscribers.delete(callback);
-//   }
-
-//   isScanning(): boolean {
-//     return this.isActive;
-//   }
-
-//   private notifySubscribers(devices: BluetoothDevice[]): void {
-//     this.subscribers.forEach(cb => cb(devices));
-//   }
-// }
 
 /**
  * Real Bluetooth Scanner (commented out - requires permissions)
@@ -160,5 +82,4 @@ class RealBluetoothScanner implements BluetoothScanner {
   }
 }
 
-// export const bluetoothScanner: BluetoothScanner = new MockBluetoothScanner();
 export const bluetoothScanner: BluetoothScanner = new RealBluetoothScanner();

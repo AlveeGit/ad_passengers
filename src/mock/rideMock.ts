@@ -39,7 +39,7 @@ export const mockZones: Zone[] = [
  */
 export const mockRideApiResponses = {
   createRideSession: (session: any) => {
-    console.log('Mock API: Creating ride session', session);
+    // console.log('Mock API: Creating ride session', session);
     return {
       success: true,
       data: {
